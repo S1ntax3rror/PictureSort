@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4c1xotqhwgg8"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_a0sis"]
+[ext_resource type="Theme" uid="uid://c0ntpcjqxvgdm" path="res://new_theme.tres" id="3_ckeat"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_a0sis")
+
+[node name="Left" type="Button" parent="."]
+offset_left = -4014.0
+offset_top = 2546.0
+offset_right = -3225.0
+offset_bottom = 2840.0
+theme = ExtResource("3_ckeat")
+text = "Left"
+
+[node name="Right" type="Button" parent="."]
+offset_left = 2179.0
+offset_top = 2642.0
+offset_right = 2968.0
+offset_bottom = 2936.0
+theme = ExtResource("3_ckeat")
+text = "Right
+"
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.1, 0.1)

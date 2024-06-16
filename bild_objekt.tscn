@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://15mayvk58fye"]
+
+[ext_resource type="Script" path="res://BildObjekt.gd" id="1_7dtrc"]
+
+[node name="BildObjekt" type="RigidBody2D"]
+gravity_scale = 0.0
+script = ExtResource("1_7dtrc")
+
+[node name="pict" type="Sprite2D" parent="."]
