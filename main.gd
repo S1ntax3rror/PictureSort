@@ -32,9 +32,13 @@ func _ready():
 	#await get_tree().create_timer(0.5).timeout
 	index = 0
 	secondary_index = 1
+	
 	set_main_bild(index)
-	set_secondary_bild(secondary_index)
-
+	
+	secondary_bild = bildlist[secondary_index]
+	secondary_bild.global_position = pos2
+	secondary_bild.visible = true
+	
 
 func set_main_bild(mainindex):
 	if main_bild != null:
@@ -43,14 +47,6 @@ func set_main_bild(mainindex):
 	main_bild = bildlist[mainindex]
 	main_bild.global_position = pos1
 	main_bild.visible = true
-
-func set_secondary_bild(indexsec):
-	if secondary_bild != null:
-		secondary_bild.visible = false
-	
-	secondary_bild = bildlist[indexsec]
-	secondary_bild.global_position = pos2
-	secondary_bild.visible = true
 
 func set_secondary_bild_sorted(get_index):
 	if secondary_bild != null:
@@ -92,7 +88,10 @@ func get_next_photo():
 		return false
 
 func calc_secondary_index():
-	return floori(sorted_bild_list.size()/(2*step))
+	if (secondary_index + floori(sorted_bild_list.size()/(2*step))) < len(sorted_bild_list):
+		return secondary_index + floori(sorted_bild_list.size()/(2*step))
+	else:
+		return len(sorted_bild_list) -1
 
 func after_successful_entrie():
 	sorted_bild_list.insert(secondary_index, main_bild)
@@ -101,7 +100,7 @@ func after_successful_entrie():
 	step = 1				#reset step
 	
 	secondary_index = floori(sorted_bild_list.size()/2)	#load next secondary bild
-	set_secondary_bild(secondary_index)
+	set_secondary_bild_sorted(secondary_index)
 
 func show_result():
 	print("##########################################################################")
@@ -116,6 +115,7 @@ func _on_right_pressed():
 		initial_click = false
 		sorted_bild_list.append(main_bild)
 		sorted_bild_list.append(secondary_bild)
+		
 		index += 2
 		secondary_index = calc_secondary_index()
 		
@@ -158,32 +158,30 @@ func _on_left_pressed():
 		set_main_bild(index)
 		set_secondary_bild_sorted(secondary_index)
 		return
-	
-	
-	if index >= bildlist.size()-1:
-		show_result()
-		return
-	
-	#update comparisonpicture (comparison was worse so we need a better one)
+		
+	print("asddjfkjasdkjfhasdljfkdsfjlkh")
+	print(index)
+	print(secondary_index)
+	print(step)
+#
+#	if index >= bildlist.size()-1:
+#		show_result()
+#		return
+#
+#	#update comparisonpicture (comparison was worse so we need a better one)
 	var old_s_index = secondary_index
-	secondary_index += calc_secondary_index()
-	
+	secondary_index = calc_secondary_index()
+
 	step += 1
-	
+
 	var step_size = abs(old_s_index - secondary_index)  #calc stepsize and make sure its positive
-	
-	if max_steps <= step:
-		after_successful_entrie()
-		return
-	
+
 	##problem 1. stepsize allways < min_stepsize
 	if step_size < min_step_size:
-		#update the comparison picture
-		set_secondary_bild_sorted(secondary_index)
+		after_successful_entrie()
 	else:
-		if secondary_index != old_s_index:
-			last_comparison = true
+		if step > max_steps:
+			after_successful_entrie()
 		else:
-			sorted_bild_list.insert(secondary_index, main_bild)	#insert into list at s_index because we are allready at the minimal step
-			if index < bildlist.size()-1:
-				after_successful_entrie()
+			secondary_index = calc_secondary_index()
+			set_secondary_bild_sorted(secondary_index)
