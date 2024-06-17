@@ -1,24 +1,33 @@
 [gd_scene load_steps=3 format=3 uid="uid://c4c1xotqhwgg8"]
 
-[ext_resource type="Script" path="res://main2.0.gd" id="1_cabvi"]
+[ext_resource type="Script" path="res://main.gd" id="1_cabvi"]
 [ext_resource type="Theme" uid="uid://c0ntpcjqxvgdm" path="res://new_theme.tres" id="3_ckeat"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_cabvi")
 
+[node name="Right4" type="Button" parent="."]
+offset_left = 3896.0
+offset_top = 2398.0
+offset_right = 4685.0
+offset_bottom = 2692.0
+theme = ExtResource("3_ckeat")
+text = "Right 4x
+"
+
 [node name="Left" type="Button" parent="."]
-offset_left = -4014.0
-offset_top = 2546.0
-offset_right = -3225.0
-offset_bottom = 2840.0
+offset_left = -4493.0
+offset_top = 2462.0
+offset_right = -3704.0
+offset_bottom = 2756.0
 theme = ExtResource("3_ckeat")
 text = "Left"
 
 [node name="Right" type="Button" parent="."]
-offset_left = 2179.0
-offset_top = 2642.0
-offset_right = 2968.0
-offset_bottom = 2936.0
+offset_left = 1412.0
+offset_top = 2450.0
+offset_right = 2201.0
+offset_bottom = 2744.0
 theme = ExtResource("3_ckeat")
 text = "Right
 "
@@ -34,5 +43,37 @@ position = Vector2(-3175, 0)
 [node name="pos2" type="Node2D" parent="."]
 position = Vector2(2812, -41)
 
+[node name="Left2" type="Button" parent="."]
+offset_left = -3298.0
+offset_top = 2512.0
+offset_right = -2509.0
+offset_bottom = 2806.0
+theme = ExtResource("3_ckeat")
+text = "Left x2"
+
+[node name="Left4" type="Button" parent="."]
+offset_left = -2029.0
+offset_top = 2454.0
+offset_right = -1240.0
+offset_bottom = 2876.0
+theme = ExtResource("3_ckeat")
+text = "Left x4"
+
+[node name="Right2" type="Button" parent="."]
+offset_left = 2773.0
+offset_top = 2424.0
+offset_right = 3562.0
+offset_bottom = 2718.0
+theme = ExtResource("3_ckeat")
+text = "Right 2x
+"
+
+[connection signal="pressed" from="Right4" to="." method="_on_right_4_pressed"]
+[connection signal="pressed" from="Right4" to="." method="_on_right_pressed"]
 [connection signal="pressed" from="Left" to="." method="_on_left_pressed"]
 [connection signal="pressed" from="Right" to="." method="_on_right_pressed"]
+[connection signal="toggled" from="Left2" to="." method="_on_left_2_toggled"]
+[connection signal="pressed" from="Left4" to="." method="_on_left_4_pressed"]
+[connection signal="pressed" from="Left4" to="." method="_on_left_pressed"]
+[connection signal="pressed" from="Right2" to="." method="_on_right_2_pressed"]
+[connection signal="pressed" from="Right2" to="." method="_on_right_pressed"]
