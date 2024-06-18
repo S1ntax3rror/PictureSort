@@ -25,6 +25,7 @@ var operations = []
 #directions
 var left = "left"
 var right = "right"
+var skip_remaining = false
 
 #stores the positions of the left and right img
 var pos_left
@@ -181,6 +182,10 @@ func update_right_index(sorted_list, operations):
 	var n = len(sorted_list)
 	#set init i as middle elem
 	var index = floor_division_by_2(n)
+	
+	if n >= 7:
+		print("re")
+	
 	#divider can be seen as the search radius of binary search
 	var divider = index
 	
@@ -206,12 +211,16 @@ func update_right_index(sorted_list, operations):
 		right_index = index
 	else:
 		next_step()
+		skip_remaining = true
 
 func action_left(multiplier):
+	skip_remaining = false
 	if ended:
 		return
 	add_operations(left, multiplier)
 	update_right_index(sorted_bilder_array, operations)
+	if skip_remaining:
+		return
 	if depth_count >= search_depth:
 		next_step()
 		return
@@ -222,10 +231,13 @@ func action_left(multiplier):
 	depth_count += 1
 
 func action_right(multiplier):
+	skip_remaining = false
 	if ended:
 		return
 	add_operations(right, multiplier)
 	update_right_index(sorted_bilder_array,operations)
+	if skip_remaining:
+		return
 	if depth_count >= search_depth:
 		next_step()
 		print("right index" + str(right_index))
@@ -241,7 +253,7 @@ func _on_left_pressed():
 	action_left(1)
 
 
-func _on_left_2_toggled(toggled_on):
+func _on_left_2_pressed():
 	action_left(2)
 
 
@@ -258,6 +270,8 @@ func _on_right_2_pressed():
 
 func _on_right_4_pressed():
 	action_right(4)
+
+
 
 
 

@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://15mayvk58fye"]
+[gd_scene load_steps=3 format=3 uid="uid://15mayvk58fye"]
 
 [ext_resource type="Script" path="res://BildObjekt.gd" id="1_7dtrc"]
+[ext_resource type="Texture2D" uid="uid://dtb11e5e2jqbl" path="res://icon.svg" id="2_qf6gw"]
 
 [node name="BildObjekt" type="RigidBody2D"]
 gravity_scale = 0.0
 script = ExtResource("1_7dtrc")
 
 [node name="pict" type="Sprite2D" parent="."]
+texture = ExtResource("2_qf6gw")

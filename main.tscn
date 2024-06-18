@@ -51,6 +51,14 @@ offset_bottom = 2806.0
 theme = ExtResource("3_ckeat")
 text = "Left x2"
 
+[node name="Left2" type="Button" parent="Left2"]
+offset_left = -3298.0
+offset_top = 2512.0
+offset_right = -2509.0
+offset_bottom = 2806.0
+theme = ExtResource("3_ckeat")
+text = "Left x2"
+
 [node name="Left4" type="Button" parent="."]
 offset_left = -2029.0
 offset_top = 2454.0
@@ -72,8 +80,9 @@ text = "Right 2x
 [connection signal="pressed" from="Right4" to="." method="_on_right_pressed"]
 [connection signal="pressed" from="Left" to="." method="_on_left_pressed"]
 [connection signal="pressed" from="Right" to="." method="_on_right_pressed"]
-[connection signal="toggled" from="Left2" to="." method="_on_left_2_toggled"]
+[connection signal="pressed" from="Left2" to="." method="_on_left_2_pressed"]
+[connection signal="pressed" from="Left2/Left2" to="." method="_on_left_2_pressed"]
 [connection signal="pressed" from="Left4" to="." method="_on_left_4_pressed"]
 [connection signal="pressed" from="Left4" to="." method="_on_left_pressed"]
-[connection signal="pressed" from="Right2" to="." method="_on_right_2_pressed"]
 [connection signal="pressed" from="Right2" to="." method="_on_right_pressed"]
+[connection signal="pressed" from="Right2" to="." method="_on_right_2_pressed"]
