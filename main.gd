@@ -35,6 +35,9 @@ var ended = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	get_tree().get_root().size_changed.connect(resize) 
+	#°DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	
 	#init left and right picture positions
 	pos_left = pos1node.global_position
 	pos_right = pos2node.global_position
@@ -57,6 +60,9 @@ func _ready():
 	set_pic_left(insert_img_index, 0)
 	set_pic_right(0)
 
+func resize():
+	for pic in bilder_array:
+		pic.rescale()
 
 func dir_contents(path):
 	var dir = DirAccess.open(path)
@@ -77,6 +83,10 @@ func dir_contents(path):
 				bilder_array[i].visible = false
 				i += 1
 			file_name = dir.get_next()
+		
+		for pic in bilder_array:
+			pic.rescale()
+		
 	else:
 		print("An error occurred when trying to access the path.")
 

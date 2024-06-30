@@ -1,0 +1,46 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://0p4knfyhmmna"]
+
+[ext_resource type="FontFile" uid="uid://dt85byhxq4l4v" path="res://Playfull.ttf" id="1_sy1w4"]
+[ext_resource type="Texture2D" uid="uid://cklgkjwoes2ce" path="res://GUI.png" id="2_55gm1"]
+[ext_resource type="StyleBox" uid="uid://cqclvvqlb6qxp" path="res://new_style_box_texture.tres" id="2_jao6d"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pem6v"]
+texture = ExtResource("2_55gm1")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(113, 81, 30, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_arvie"]
+texture = ExtResource("2_55gm1")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(145, 65, 46, 14)
+
+[resource]
+Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
+Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
+Button/colors/icon_focus_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_normal_color = Color(1, 1, 1, 1)
+Button/colors/icon_pressed_color = Color(1, 1, 1, 1)
+Button/constants/h_separation = 4
+Button/constants/icon_max_width = 0
+Button/constants/outline_size = 0
+Button/font_sizes/font_size = 200
+Button/fonts/font = ExtResource("1_sy1w4")
+Button/styles/disabled = SubResource("StyleBoxTexture_pem6v")
+Button/styles/focus = ExtResource("2_jao6d")
+Button/styles/hover = SubResource("StyleBoxTexture_arvie")
+Button/styles/normal = ExtResource("2_jao6d")
+Button/styles/pressed = ExtResource("2_jao6d")
