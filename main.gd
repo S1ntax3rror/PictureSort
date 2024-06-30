@@ -6,7 +6,7 @@ extends Node2D
 @onready var pos2node = $pos2
 
 #sets max binary search radius
-@export var search_depth = 2
+@export var search_depth = 10
 var depth_count = 0
 var bilder_array = []
 var debug_array = [0,1]
@@ -14,12 +14,10 @@ var debug_array = [0,1]
 #index to go through all images
 var insert_img_index = 0
 
-#index pointing to right picture shown
-#allways in the sorted array
-var right_index
 
 #holds the sorted imgaes
 var sorted_bilder_array = []
+var clear_sorted_bilder_array = []
 
 #hold the operations done temporarely
 var operations = []
@@ -54,11 +52,10 @@ func _ready():
 	sorted_bilder_array.append(bilder_array[0])
 	#set iteration variables correct
 	insert_img_index = 1
-	right_index = 0
 	
 	#initialize first two pictures to show
-	set_pic_left(insert_img_index)
-	set_pic_right(right_index)
+	set_pic_left(insert_img_index, 0)
+	set_pic_right(0)
 
 
 func dir_contents(path):
@@ -71,7 +68,7 @@ func dir_contents(path):
 			if ".import" in file_name:
 				pass
 			else: 
-#				print("Found file: " + file_name)
+				print("Found file: " + file_name)
 #				await get_tree().create_timer(0.5).timeout
 				bilder_array.append(bildobject.instantiate())
 				bilder_array[i].path = "Photos-001/" + file_name
@@ -84,7 +81,7 @@ func dir_contents(path):
 		print("An error occurred when trying to access the path.")
 
 
-func set_pic_left(index):
+func set_pic_left(index, right_index):
 	bilder_array[index].global_position = pos_left
 	
 	#set correct picture to visible
@@ -154,19 +151,18 @@ func show_results():
 		print(destination_path)
 		copyfile(pic_path, destination_path)
 		count -= 1
-		
 
 func floor_division_by_2(n):
 	return floor(n/2)
 
 func insert_left_img_into_sorted_array(insert_index, sorted_array, pict):
-	if len(sorted_array)-1 < insert_img_index:
+	if len(sorted_array)-1 < insert_index:
 		sorted_bilder_array.append(pict)
 	else:
 		sorted_array.insert(insert_index, pict)
 		debug_array.insert(insert_index, len(sorted_array))
 
-func next_step():
+func next_step(right_index):
 	if insert_img_index > len(bilder_array)-1:
 		show_results()
 		return
@@ -185,134 +181,114 @@ func next_step():
 		return
 	#update images to show
 	set_pic_right(right_index)
-	set_pic_left(insert_img_index)
+	set_pic_left(insert_img_index, right_index)
 
-func update_right_index(sorted_list, operations):
+func update_right_index(sorted_list):
+	
+	var processed_operations = []
 	var n = len(sorted_list)
-	#set init i as middle elem
-	var index = floor_division_by_2(n)
+	var divider = floor_division_by_2(n)
+	var pos = divider
+	var old_pos = pos
+	var found_final_position = false
 	
-	#count how many operations have been used to tell if they should be considered or not
-	var directions_to_count = 0
-	
-	#divider can be seen as the search radius of binary search
-	var divider = index
-	
-	var has_reached_maxima = false
-	#loop through operations array and travel down the binary tree
-	for direction in operations:
-		directions_to_count += 1
-		#if left --> picture to sort (right picture) is better than right picture
-		# --> show better image through adding to the right index
+	for operation in operations:
+		processed_operations.append(operation)
 		divider = floor_division_by_2(divider)
-		if direction == left and divider != 0:
-			print("direction == left and divider != 0")
-			index += divider
-		#if right --> picture to sort (left picture) is worse than right picture
-		# --> show better image through subtracting from the right index 
-		elif direction == right and divider != 0:
-			print("direction == right and divider != 0")
-			index -= divider
-		# edgecase #1 the element n-1 can in some cases not be reached by adding
-		# up floordivisions of n --> we need to keep adding 1 untill we reach n-1
-		# if we only ever add and never subtract 
-		elif direction == left and divider == 0:
-			print("direction == left and divider == 0")
-			var directions_counter = 0
-			for direction_2 in operations:
-				directions_counter += 1
-				if directions_to_count <= directions_counter:
+		
+		if operation == left:
+			if divider != 0:
+				pos += divider
+				
+				#Check if out of index
+				if pos > n-1:
+					found_final_position = true
+					pos = old_pos
 					break
-				if direction_2 == right:
-					print("direction_2 == right")
-					has_reached_maxima = true
-					break
-			#has to be <= not < due to inserting at this index --> appending at index n in the edgecaes
-			if !has_reached_maxima and index <= len(sorted_bilder_array)-1:
-				print("!has_reached_maxima and index < len(sorted_bilder_array)-1")
-				index += 1
-			elif index >= len(sorted_bilder_array)-1:
-				has_reached_maxima = true
+			
 			else:
-				has_reached_maxima = true
-				index += 1
-				right_index = index
-		# edgecase #2 the element 0 can in some cases not be reached by subtracting
-		# floordivisions of n --> we need to keep subtracting 1 untill we reach 0
-		# if we only ever subtract and never add
-		elif direction == right and divider == 0:
-			print("direction == right and divider == 0")
-			var directions_counter = 0
-			for direction_2 in operations:
-				directions_counter += 1
-				if directions_to_count <= directions_counter:
+				# if only moved into one direction,
+				# edge case applies --> +1 needed
+				# otherwise end found
+				
+				# check if only left:
+				var only_left = true
+				for op in processed_operations:
+					if op != left:
+						only_left = false
+						break
+				
+				if !only_left:
+					found_final_position = true
 					break
-				if direction_2 == left:
-					print("direction_2 == left")
-					has_reached_maxima = true
+				
+				pos += 1
+				
+				if pos > n-1:
+					found_final_position = true
 					break
-			if !has_reached_maxima and index > 0:
-				print("!has_reached_maxima and index < len(sorted_bilder_array)-1")
-				index -= 1
-			elif index <= 0:
-				has_reached_maxima = true
+		
+		elif operation == right:
+			
+			if  divider != 0:
+				pos -= divider
+				
+				if pos < 0:
+					found_final_position = true
+					pos = old_pos
+					break
+			
 			else:
-				has_reached_maxima = true
-				index -= 1
-				right_index = index
-		#means, the search_radius already reched 0 
-		# --> no improvement when using more operations 
-		# --> use next_step
-		else:
-			print("else")
-			has_reached_maxima = true
-			break
-	if !has_reached_maxima:
-		right_index = index
-	else:
-		next_step()
-		skip_remaining = true
+				var only_right = true
+				
+				for op in processed_operations:
+					if op != right:
+						only_right = false
+						break
+				
+				if !only_right:
+					found_final_position = true
+					break
+				
+				pos -= 1
+				
+				if pos < 0:
+					found_final_position = true
+					break
+		
+		old_pos = pos
+		
+		
+	if !found_final_position:
+		set_pic_right(pos)
+		return
+	
+	if operations[0] == right:
+		pos += 1
+	next_step(pos)
+
+func update_clearlist():
+	clear_sorted_bilder_array = []
+	for pic in sorted_bilder_array:
+		clear_sorted_bilder_array.append(pic.path)
+
 
 func action_left(multiplier):
+	update_clearlist()
 	skip_remaining = false
 	if ended:
 		return
 	add_operations(left, multiplier)
-	update_right_index(sorted_bilder_array, operations)
-	
-	print_sorted_arr()
-	
-	if skip_remaining:
-		return
-	if depth_count >= search_depth:
-		next_step()
-		return
-	set_pic_right(right_index)
-	
-	print("right index" + str(right_index))
-	print("left index" + str(insert_img_index))
-	depth_count += 1
+	update_right_index(sorted_bilder_array)
+
 
 func action_right(multiplier):
+	update_clearlist()
 	skip_remaining = false
 	if ended:
 		return
 	add_operations(right, multiplier)
-	update_right_index(sorted_bilder_array,operations)
-	if skip_remaining:
-		return
-	if depth_count >= search_depth:
-		next_step()
-		print("reset Due to DEPTH")
-		print("right index" + str(right_index))
-		print("left index" + str(insert_img_index))
-		return
-	print("NORMAL SORT")
-	print("right index" + str(right_index))
-	print("left index" + str(insert_img_index))
-	set_pic_right(right_index)
-	depth_count += 1
-	print_sorted_arr()
+	update_right_index(sorted_bilder_array)
 
 
 func init_order(direction):
@@ -326,8 +302,8 @@ func init_order(direction):
 	if insert_img_index > len(bilder_array)-1:
 		show_results()
 		return
-	set_pic_left(insert_img_index)
-	right_index = floor_division_by_2(len(sorted_bilder_array))
+	set_pic_left(insert_img_index, 0)
+	var right_index = floor_division_by_2(len(sorted_bilder_array))
 	set_pic_right(right_index)
 	print("initial array looks like:" + sorted_bilder_array[0].path + ", " + sorted_bilder_array[1].path)
 
@@ -338,6 +314,7 @@ func print_sorted_arr():
 
 func _on_left_pressed():
 	if initial_click:
+		update_clearlist()
 		init_order(left)
 	else:
 		action_left(1)
